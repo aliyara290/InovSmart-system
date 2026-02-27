@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+spring:
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+
+  application:
+    name: company-service
