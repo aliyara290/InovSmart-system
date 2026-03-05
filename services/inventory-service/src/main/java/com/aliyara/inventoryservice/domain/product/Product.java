@@ -15,6 +15,7 @@ public class Product {
     private String sku;
     private UUID productId;
     private UUID categoryId;
+    private boolean active;
 
     private Product(Builder builder) {
         this.id = builder.id != null ? builder.id : UUID.randomUUID();
@@ -26,6 +27,7 @@ public class Product {
         this.sku = builder.sku;
         this.productId = builder.productId;
         this.categoryId = builder.categoryId;
+        this.active = builder.active;
     }
 
     public static class Builder {
@@ -37,6 +39,7 @@ public class Product {
         private String sku;
         private UUID productId;
         private UUID categoryId;
+        private boolean active = true;
 
         public Builder id(UUID id) {
             this.id = id;
@@ -78,6 +81,11 @@ public class Product {
             return this;
         }
 
+        public Builder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
         public Product build() {
             return new Product(this);
         }
@@ -100,6 +108,14 @@ public class Product {
             throw new IllegalArgumentException("Product SKU cannot be empty");
         }
         this.sku = sku;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public void activate() {
+        this.active = true;
     }
 
     private void validate(Builder builder) {
