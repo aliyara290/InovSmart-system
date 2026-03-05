@@ -17,6 +17,7 @@ public class Stock {
     private int quantityReserved;
     private StockStatus status;
     private int minStock;
+    private int maxStock;
     private LocalDateTime lastUpdatedAt;
     private final UUID productId;
     private final List<StockHistory> stockHistories;
@@ -28,6 +29,7 @@ public class Stock {
         this.quantityReserved = builder.quantityReserved;
         this.status = builder.status != null ? builder.status : StockStatus.IN_STOCK;
         this.minStock = builder.minStock;
+        this.maxStock = builder.maxStock;
         this.lastUpdatedAt = builder.lastUpdatedAt != null ? builder.lastUpdatedAt : LocalDateTime.now();
         this.productId = builder.productId;
         this.stockHistories = new ArrayList<>(builder.stockHistories != null ? builder.stockHistories : List.of());
@@ -39,6 +41,7 @@ public class Stock {
         private int quantityReserved;
         private StockStatus status;
         private int minStock;
+        private int maxStock;
         private LocalDateTime lastUpdatedAt;
         private UUID productId;
         private List<StockHistory> stockHistories;
@@ -65,6 +68,11 @@ public class Stock {
 
         public Builder minStock(int minStock) {
             this.minStock = minStock;
+            return this;
+        }
+
+        public Builder maxStock(int maxStock) {
+            this.maxStock = maxStock;
             return this;
         }
 
@@ -137,6 +145,10 @@ public class Stock {
         return quantityTotal - quantityReserved;
     }
 
+    public boolean isOverstock() {
+        return maxStock > 0 && quantityTotal > maxStock;
+    }
+
     private void refreshStatus() {
         if (quantityTotal == 0) {
             this.status = StockStatus.OUT_OF_STOCK;
@@ -159,6 +171,9 @@ public class Stock {
         }
         if (builder.minStock < 0) {
             throw new IllegalArgumentException("Stock minStock cannot be negative");
+        }
+        if (builder.maxStock < 0) {
+            throw new IllegalArgumentException("Stock maxStock cannot be negative");
         }
     }
 }
