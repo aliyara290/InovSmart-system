@@ -4,6 +4,8 @@ import com.aliyara.companyservice.domain.model.ids.CompanyId;
 import com.aliyara.companyservice.domain.model.ids.TenantId;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class Company {
 
@@ -18,6 +20,8 @@ public class Company {
     private String description;
     private Address address;
     private CompanySettings companySettings;
+    private final LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     private Company(Builder builder) {
         this.id = builder.id != null ? builder.id : new CompanyId();
@@ -32,6 +36,8 @@ public class Company {
         this.description = builder.description;
         this.address = builder.address;
         this.companySettings = builder.companySettings;
+        this.createdAt = builder.createdAt != null ? builder.createdAt : LocalDateTime.now();
+        this.updatedAt = builder.updatedAt != null ? builder.updatedAt : LocalDateTime.now();
     }
 
     public static class Builder {
@@ -46,6 +52,8 @@ public class Company {
         private String description;
         private Address address;
         private CompanySettings companySettings;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
 
         public Builder id(CompanyId id) {
             this.id = id;
@@ -102,9 +110,33 @@ public class Company {
             return this;
         }
 
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
         public Company build() {
             return new Company(this);
         }
+    }
+
+    public void updateName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Company name cannot be empty");
+        }
+        this.name = name;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateContactInfo(String phone, String website) {
+        this.phone = phone;
+        this.website = website;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateAddress(Address address) {
@@ -112,6 +144,7 @@ public class Company {
             throw new IllegalArgumentException("Address cannot be null");
         }
         this.address = address;
+        this.updatedAt = LocalDateTime.now();
     }
 
     public void updateCompanySettings(CompanySettings companySettings) {
@@ -119,6 +152,7 @@ public class Company {
             throw new IllegalArgumentException("Company settings cannot be null");
         }
         this.companySettings = companySettings;
+        this.updatedAt = LocalDateTime.now();
     }
 
     private void validate(Builder builder) {
