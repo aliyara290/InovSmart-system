@@ -1,14 +1,14 @@
 package com.aliyara.companyservice.domain.model;
 
-import lombok.EqualsAndHashCode;
+import com.aliyara.companyservice.domain.model.ids.CompanyId;
+import com.aliyara.companyservice.domain.model.ids.TenantId;
 import lombok.Getter;
 
-import java.util.Objects;
-
+@Getter
 public class Company {
 
-    private final String id;
-    private final String tenantId;
+    private final CompanyId id;
+    private final TenantId tenantId;
     private String name;
     private String email;
     private String phone;
@@ -20,9 +20,9 @@ public class Company {
     private CompanySettings companySettings;
 
     private Company(Builder builder) {
+        this.id = builder.id != null ? builder.id : new CompanyId();
+        this.tenantId = builder.tenantId != null ? builder.tenantId : new TenantId();
         validate(builder);
-        this.id = builder.id;
-        this.tenantId = builder.tenantId;
         this.name = builder.name;
         this.email = builder.email;
         this.phone = builder.phone;
@@ -35,8 +35,8 @@ public class Company {
     }
 
     public static class Builder {
-        private String id;
-        private String tenantId;
+        private CompanyId id;
+        private TenantId tenantId;
         private String name;
         private String email;
         private String phone;
@@ -47,12 +47,12 @@ public class Company {
         private Address address;
         private CompanySettings companySettings;
 
-        public Builder id(String id) {
+        public Builder id(CompanyId id) {
             this.id = id;
             return this;
         }
 
-        public Builder tenantId(String tenantId) {
+        public Builder tenantId(TenantId tenantId) {
             this.tenantId = tenantId;
             return this;
         }
@@ -107,7 +107,25 @@ public class Company {
         }
     }
 
+    public void updateAddress(Address address) {
+        if (address == null) {
+            throw new IllegalArgumentException("Address cannot be null");
+        }
+        this.address = address;
+    }
+
+    public void updateCompanySettings(CompanySettings companySettings) {
+        if (companySettings == null) {
+            throw new IllegalArgumentException("Company settings cannot be null");
+        }
+        this.companySettings = companySettings;
+    }
+
     private void validate(Builder builder) {
+        if (this.tenantId == null || this.tenantId.id() == null) {
+            throw new IllegalArgumentException("Company tenantId cannot be empty");
+        }
+
         if (builder.name == null || builder.name.isBlank()) {
             throw new IllegalArgumentException("Company name cannot be empty");
         }
@@ -115,5 +133,10 @@ public class Company {
         if (builder.email == null || !builder.email.contains("@")) {
             throw new IllegalArgumentException("Invalid email");
         }
+
+        if (builder.phone == null || builder.phone.isBlank()) {
+            throw new IllegalArgumentException("Company phone cannot be empty");
+        }
     }
+
 }

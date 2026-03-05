@@ -2,13 +2,16 @@ server:
   port: 8081
 
 spring:
+  profiles:
+    active: dev
   config:
     import: "optional:configserver:"
   cloud:
     config:
-      discovery:
-        enabled: true
-        service-id: config-server
+      uri: "http://localhost:8888"
+#      discovery:
+#        enabled: true
+#        service-id: config-server
 
   application:
     name: company-service

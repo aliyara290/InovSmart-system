@@ -1,47 +1,35 @@
 package com.aliyara.companyservice.domain.model;
 
+import lombok.Getter;
+import java.util.Objects;
+
+@Getter
 public class CompanySettings {
-    private final String id;
-    private final String tenantId;
     private String logo;
-    private int vat;
+    private Integer vat;
     private String currency;
     private String language;
 
-
     public CompanySettings(Builder builder) {
-        this.id = builder.id;
-        this.tenantId = builder.tenantId;
+        validate(builder);
         this.logo = builder.logo;
         this.vat = builder.vat;
         this.currency = builder.currency;
         this.language = builder.language;
     }
 
-    public static class Builder{
-        private String id;
-        private String tenantId;
+    public static class Builder {
         private String logo;
-        private int vat;
+        private Integer vat;
         private String currency;
         private String language;
-
-        public Builder setId(String id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder setTenantId(String tenantId) {
-            this.tenantId = tenantId;
-            return this;
-        }
 
         public Builder setLogo(String logo) {
             this.logo = logo;
             return this;
         }
 
-        public Builder setVat(int vat) {
+        public Builder setVat(Integer vat) {
             this.vat = vat;
             return this;
         }
@@ -59,5 +47,34 @@ public class CompanySettings {
         public CompanySettings build() {
             return new CompanySettings(this);
         }
+    }
+
+    private void validate(Builder builder) {
+
+        if (builder.vat == null || builder.vat <= 0) {
+            throw new IllegalArgumentException("Invalid VAT!");
+        }
+
+        if (builder.currency == null || builder.currency.isBlank()) {
+            throw new IllegalArgumentException("Currency cannot be empty");
+        }
+
+        if (builder.language == null || builder.language.isBlank()) {
+            throw new IllegalArgumentException("Language cannot be empty");
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass())
+            return false;
+        CompanySettings that = (CompanySettings) o;
+        return Objects.equals(logo, that.logo) && Objects.equals(vat, that.vat)
+                && Objects.equals(currency, that.currency) && Objects.equals(language, that.language);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(logo, vat, currency, language);
     }
 }

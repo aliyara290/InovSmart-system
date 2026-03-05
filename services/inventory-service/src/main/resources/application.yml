@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  profiles:
+    active: dev
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: "http://localhost:8888"
+
+  application:
+    name: inventory-service
+
