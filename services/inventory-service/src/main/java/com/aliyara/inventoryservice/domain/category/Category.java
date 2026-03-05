@@ -9,6 +9,7 @@ import java.util.UUID;
 public class Category {
 
     private final UUID id;
+    private final String tenantId;
     private String name;
     private String description;
     private final LocalDateTime createdAt;
@@ -16,6 +17,7 @@ public class Category {
     private Category(Builder builder) {
         this.id = builder.id != null ? builder.id : UUID.randomUUID();
         validate(builder);
+        this.tenantId = builder.tenantId;
         this.name = builder.name;
         this.description = builder.description;
         this.createdAt = builder.createdAt != null ? builder.createdAt : LocalDateTime.now();
@@ -23,12 +25,18 @@ public class Category {
 
     public static class Builder {
         private UUID id;
+        private String tenantId;
         private String name;
         private String description;
         private LocalDateTime createdAt;
 
         public Builder id(UUID id) {
             this.id = id;
+            return this;
+        }
+
+        public Builder tenantId(String tenantId) {
+            this.tenantId = tenantId;
             return this;
         }
 
@@ -64,6 +72,9 @@ public class Category {
     }
 
     private void validate(Builder builder) {
+        if (builder.tenantId == null || builder.tenantId.isBlank()) {
+            throw new IllegalArgumentException("Category tenantId cannot be empty");
+        }
         if (builder.name == null || builder.name.isBlank()) {
             throw new IllegalArgumentException("Category name cannot be empty");
         }
