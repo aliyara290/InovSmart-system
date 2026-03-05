@@ -2,6 +2,7 @@ package com.aliyara.inventoryservice.domain.category;
 
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -10,18 +11,21 @@ public class Category {
     private final UUID id;
     private String name;
     private String description;
+    private final LocalDateTime createdAt;
 
     private Category(Builder builder) {
         this.id = builder.id != null ? builder.id : UUID.randomUUID();
         validate(builder);
         this.name = builder.name;
         this.description = builder.description;
+        this.createdAt = builder.createdAt != null ? builder.createdAt : LocalDateTime.now();
     }
 
     public static class Builder {
         private UUID id;
         private String name;
         private String description;
+        private LocalDateTime createdAt;
 
         public Builder id(UUID id) {
             this.id = id;
@@ -35,6 +39,11 @@ public class Category {
 
         public Builder description(String description) {
             this.description = description;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
             return this;
         }
 
