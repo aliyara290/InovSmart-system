@@ -4,12 +4,26 @@ import com.aliyara.companyservice.domain.model.Company;
 import com.aliyara.companyservice.domain.model.ids.CompanyId;
 import com.aliyara.companyservice.domain.model.ids.TenantId;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CompanyRepository {
+
     Company save(Company company);
-    Optional<Company> existById(CompanyId id);
+
     Optional<Company> findById(CompanyId id);
+
     Optional<Company> findByTenantId(TenantId tenantId);
-    void deleteById(CompanyId companyId);
+
+    Optional<Company> findByEmail(String email);
+
+    Optional<Company> findByName(String name);
+
+    List<Company> findAll();
+
+    boolean existsByTenantId(TenantId tenantId);
+
+    boolean existsByName(String name);
+
+    void deleteById(CompanyId id);
 }
