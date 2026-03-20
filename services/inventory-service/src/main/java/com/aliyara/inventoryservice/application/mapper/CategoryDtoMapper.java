@@ -8,11 +8,13 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface CategoryDtoMapper {
 
-    default Category toDomain(CategoryRequest request) {
+    default Category toDomain(CategoryRequest request, String tenantId) {
         if (request == null)
             return null;
         return new Category.Builder()
+                .tenantId(tenantId)
                 .name(request.getName())
+                .description(request.getDescription())
                 .build();
     }
 

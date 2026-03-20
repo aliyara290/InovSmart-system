@@ -33,7 +33,7 @@ public class CompanyController {
     @GetMapping("/hello")
     public ResponseEntity<String> register() {
         String response = "Hello world!";
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{tenantId}")

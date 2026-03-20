@@ -7,6 +7,7 @@ import com.aliyara.inventoryservice.application.port.in.CategoryUseCase;
 import com.aliyara.inventoryservice.domain.category.Category;
 import com.aliyara.inventoryservice.domain.exception.CategoryNotFoundException;
 import com.aliyara.inventoryservice.domain.port.CategoryRepository;
+import com.aliyara.inventoryservice.infrastructure.config.TenantContextHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,8 @@ public class CategoryService implements CategoryUseCase {
     @Override
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request) {
-        Category category = categoryDtoMapper.toDomain(request);
+        String tenantId = TenantContextHolder.getTenantId();
+        Category category = categoryDtoMapper.toDomain(request, tenantId);
         Category saved = categoryRepository.save(category);
         return categoryDtoMapper.toResponse(saved);
     }
@@ -33,7 +35,8 @@ public class CategoryService implements CategoryUseCase {
     @Override
     @Transactional(readOnly = true)
     public CategoryResponse getCategory(UUID id) {
-        Category category = categoryRepository.findById(id)
+        String tenantId = TenantContextHolder.getTenantId();
+        Category category = categoryRepository.findByIdAndTenantId(id, tenantId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
         return categoryDtoMapper.toResponse(category);
     }
@@ -41,7 +44,8 @@ public class CategoryService implements CategoryUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryResponse> getAllCategories() {
-        return categoryRepository.findAll()
+        String tenantId = TenantContextHolder.getTenantId();
+        return categoryRepository.findAllByTenantId(tenantId)
                 .stream()
                 .map(categoryDtoMapper::toResponse)
                 .collect(Collectors.toList());
@@ -50,8 +54,21 @@ public class CategoryService implements CategoryUseCase {
     @Override
     @Transactional
     public void deleteCategory(UUID id) {
-        categoryRepository.findById(id)
+        String tenantId = TenantContextHolder.getTenantId();
+        categoryRepository.findByIdAndTenantId(id, tenantId)
                 .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
         categoryRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public CategoryResponse updateCategory(UUID id, CategoryRequest request) {
+        String tenantId = TenantContextHolder.getTenantId();
+        Category category = categoryRepository.findByIdAndTenantId(id, tenantId)
+                .orElseThrow(() -> new CategoryNotFoundException("Category not found with id: " + id));
+        category.updateName(request.getName());
+        category.updateDescription(request.getDescription());
+        Category saved = categoryRepository.save(category);
+        return categoryDtoMapper.toResponse(saved);
     }
 }

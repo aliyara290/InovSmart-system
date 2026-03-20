@@ -17,15 +17,12 @@ public class GatewayConfig {
                 .route("inventory-service", r -> r.path("/inventory/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://INVENTORY-SERVICE"))
-                .route("procurement-service", r -> r.path("/procurement/**")
-                        .filters(f -> f.stripPrefix(1))
-                        .uri("lb://PROCUREMENT-SERVICE"))
                 .route("billing-service", r -> r.path("/billing/**")
                         .filters(f -> f.stripPrefix(1))
                         .uri("lb://BILLING-SERVICE"))
-//                .route("payment-service", r -> r.path("/generator/**")
-//                        .filters(f -> f.stripPrefix(1))
-//                        .uri("lb://PAYMENT-SERVICE"))
+                .route("supply-service", r -> r.path("/supply/**")
+                        .filters(f -> f.stripPrefix(1))
+                        .uri("lb://SUPPLY-SERVICE"))
                 .build();
     }
 }

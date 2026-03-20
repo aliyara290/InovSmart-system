@@ -14,9 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProductRequest {
 
-    @NotBlank(message = "tenantId is required")
-    private String tenantId;
-
     @NotBlank(message = "name is required")
     private String name;
 
@@ -30,4 +27,15 @@ public class ProductRequest {
 
     @NotNull(message = "categoryId is required")
     private UUID categoryId;
+
+
+
+    @NotNull(message = "stock is required")
+    private int stock;
+
+    @NotNull(message = "min stock is required")
+    private int minStock;
+
+    @NotNull(message = "max stock is required")
+    private int maxStock;
 }

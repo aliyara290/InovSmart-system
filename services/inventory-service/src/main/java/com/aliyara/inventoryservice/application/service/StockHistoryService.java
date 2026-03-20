@@ -22,7 +22,7 @@ public class StockHistoryService implements StockHistoryUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<StockHistoryResponse> getHistoryByProductId(UUID productId) {
-        return stockHistoryRepository.findAllByProductId(productId)
+        return stockHistoryRepository.findByProductId(productId)
                 .stream()
                 .map(stockDtoMapper::toHistoryResponse)
                 .collect(Collectors.toList());

@@ -1,6 +1,8 @@
 package com.aliyara.companyservice.adapters.out.keycloak.client;
 
-import com.aliyara.companyservice.adapters.out.keycloak.dto.*;
+import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakGroupRepresentation;
+import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakRoleRepresentation;
+import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakUserRepresentation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,4 +36,12 @@ public interface KeycloakGroupClient {
 
     @GetMapping("/admin/realms/${keycloak.realm}/groups/{groupId}/members")
     List<KeycloakUserRepresentation> getGroupMembers(@PathVariable("groupId") String groupId);
+
+
+    @GetMapping("/admin/realms/${keycloak.realm}/roles/{name}")
+    KeycloakRoleRepresentation getRealmRole(@PathVariable String name);
+
+    @PostMapping("/admin/realms/${keycloak.realm}/groups/{groupId}/role-mappings/realm")
+    Void attachRoleToGroup(@PathVariable String groupId, @RequestBody List<KeycloakRoleRepresentation> roles);
+
 }

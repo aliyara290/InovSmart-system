@@ -17,6 +17,9 @@ public class CategoryEntity {
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "tenant_id", nullable = false)
+    private String tenantId;
+
+    @Column(nullable = false)
     private String name;
 }

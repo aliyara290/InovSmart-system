@@ -11,6 +11,7 @@ import com.aliyara.inventoryservice.domain.port.StockRepository;
 import com.aliyara.inventoryservice.domain.stock.Stock;
 import com.aliyara.inventoryservice.domain.stock.StockHistory;
 import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
+import com.aliyara.inventoryservice.infrastructure.config.TenantContextHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +37,8 @@ public class StockService implements StockUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<StockResponse> getAllStocks(String tenantId) {
+    public List<StockResponse> getAllStocks() {
+        String tenantId = TenantContextHolder.getTenantId();
         return stockRepository.findAllByTenantId(tenantId)
                 .stream()
                 .map(stockDtoMapper::toResponse)
@@ -126,13 +128,8 @@ public class StockService implements StockUseCase {
                 .orElseThrow(() -> new StockNotFoundException("Stock not found for product: " + productId));
     }
 
-    /**
-     * Fetch tenantId from the associated product via the stock's productId.
-     * For simplicity, we store tenantId on the StockHistory using the stock's
-     * productId-based lookup.
-     * This can be enriched with a ProductRepository injection if needed.
-     */
     private String resolveTenantId(Stock stock) {
-        return stock.getProductId() != null ? stock.getProductId().toString() : "unknown";
+        String tenantId = TenantContextHolder.getTenantId();
+        return tenantId != null ? tenantId : "unknown";
     }
 }

@@ -6,8 +6,6 @@ server:
 spring:
   application:
     name: company-service
-  main:
-    allow-bean-definition-overriding: true
   config:
     import: "optional:configserver:"
   cloud:

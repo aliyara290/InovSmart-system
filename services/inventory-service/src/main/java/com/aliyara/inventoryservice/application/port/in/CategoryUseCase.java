@@ -14,4 +14,6 @@ public interface CategoryUseCase {
     List<CategoryResponse> getAllCategories();
 
     void deleteCategory(UUID id);
+
+    CategoryResponse updateCategory(UUID id, CategoryRequest request);
 }

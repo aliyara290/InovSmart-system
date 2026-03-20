@@ -8,7 +8,5 @@ import java.util.UUID;
 
 public interface StockHistoryUseCase {
 
-    List<StockHistoryResponse> getHistoryByProductId(UUID productId, String tenantId);
-
-    List<StockHistoryResponse> getHistoryByDateRange(String tenantId, LocalDateTime from, LocalDateTime to);
+    List<StockHistoryResponse> getHistoryByProductId(UUID productId);
 }

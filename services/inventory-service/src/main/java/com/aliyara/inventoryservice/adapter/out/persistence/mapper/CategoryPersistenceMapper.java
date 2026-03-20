@@ -14,6 +14,7 @@ public interface CategoryPersistenceMapper {
             return null;
         return new Category.Builder()
                 .id(entity.getId())
+                .tenantId(entity.getTenantId())
                 .name(entity.getName())
                 .build();
     }

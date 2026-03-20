@@ -103,6 +103,6 @@ public class ManageCompanyUsersService implements ManageCompanyUsersUseCase {
     }
 
     private UserRole determineCurrentRole(String keycloakUserId, UUID tenantId) {
-        return UserRole.EMPLOYEE;
+        return UserRole.OWNER;
     }
 }

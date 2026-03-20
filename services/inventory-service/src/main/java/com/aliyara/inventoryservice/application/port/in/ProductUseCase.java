@@ -11,7 +11,7 @@ public interface ProductUseCase {
 
     ProductResponse getProduct(UUID id);
 
-    List<ProductResponse> getAllProducts(String tenantId);
+    List<ProductResponse> getAllProducts();
 
     ProductResponse updateProduct(UUID id, ProductRequest request);
 

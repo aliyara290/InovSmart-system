@@ -4,8 +4,10 @@ import com.aliyara.inventoryservice.adapter.out.persistence.jpa.StockJpaReposito
 import com.aliyara.inventoryservice.adapter.out.persistence.mapper.StockPersistenceMapper;
 import com.aliyara.inventoryservice.domain.port.StockRepository;
 import com.aliyara.inventoryservice.domain.stock.Stock;
+import com.aliyara.inventoryservice.domain.stock.enums.StockStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,14 +29,14 @@ public class StockRepositoryAdapter implements StockRepository {
     }
 
     @Override
-    public Optional<Stock> findById(UUID id) {
-        return stockJpaRepository.findById(id)
+    public Optional<Stock> findByProductId(UUID productId) {
+        return stockJpaRepository.findByProductId(productId)
                 .map(stockPersistenceMapper::toDomain);
     }
 
     @Override
-    public Optional<Stock> findByProductId(UUID productId) {
-        return stockJpaRepository.findByProductId(productId)
+    public Optional<Stock> findByProductIdAndTenantId(UUID productId, String tenantId) {
+        return stockJpaRepository.findByProductIdAndTenantId(productId, tenantId)
                 .map(stockPersistenceMapper::toDomain);
     }
 
@@ -44,5 +46,27 @@ public class StockRepositoryAdapter implements StockRepository {
                 .stream()
                 .map(stockPersistenceMapper::toDomain)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Stock> findByTenantIdAndStatus(String tenantId, StockStatus status) {
+        return stockJpaRepository.findByTenantIdAndStatus(tenantId, status)
+                .stream()
+                .map(stockPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Stock> findLowStockByTenantId(String tenantId) {
+        return stockJpaRepository.findLowStockByTenantId(tenantId)
+                .stream()
+                .map(stockPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void deleteByProductId(UUID productId) {
+        stockJpaRepository.deleteByProductId(productId);
     }
 }

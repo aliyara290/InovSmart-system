@@ -6,6 +6,7 @@ import com.aliyara.inventoryservice.application.port.in.ProductUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,21 +21,25 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER')")
     public ProductResponse createProduct(@Valid @RequestBody ProductRequest request) {
         return productUseCase.createProduct(request);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ProductResponse getProduct(@PathVariable UUID id) {
         return productUseCase.getProduct(id);
     }
 
     @GetMapping
-    public List<ProductResponse> getAllProducts(@RequestParam String tenantId) {
-        return productUseCase.getAllProducts(tenantId);
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
+    public List<ProductResponse> getAllProducts() {
+        return productUseCase.getAllProducts();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER')")
     public ProductResponse updateProduct(@PathVariable UUID id,
             @Valid @RequestBody ProductRequest request) {
         return productUseCase.updateProduct(id, request);
@@ -42,6 +47,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER')")
     public void deleteProduct(@PathVariable UUID id) {
         productUseCase.deleteProduct(id);
     }

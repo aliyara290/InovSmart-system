@@ -33,8 +33,20 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAll() {
-        return categoryJpaRepository.findAll()
+    public Optional<Category> findByIdAndTenantId(UUID id, String tenantId) {
+        return categoryJpaRepository.findByIdAndTenantId(id, tenantId)
+                .map(categoryPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Category> findByNameAndTenantId(String name, String tenantId) {
+        return categoryJpaRepository.findByNameAndTenantId(name, tenantId)
+                .map(categoryPersistenceMapper::toDomain);
+    }
+
+    @Override
+    public List<Category> findAllByTenantId(String tenantId) {
+        return categoryJpaRepository.findAllByTenantId(tenantId)
                 .stream()
                 .map(categoryPersistenceMapper::toDomain)
                 .collect(Collectors.toList());
@@ -43,5 +55,10 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
     @Override
     public void deleteById(UUID id) {
         categoryJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByNameAndTenantId(String name, String tenantId) {
+        return categoryJpaRepository.existsByNameAndTenantId(name, tenantId);
     }
 }

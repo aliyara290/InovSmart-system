@@ -90,6 +90,46 @@ services:
       timeout: 5s
       retries: 5
 
+  inventory-db:
+    image: postgres:15-alpine
+    container_name: inventory-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - inventory-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  billing-db:
+    image: postgres:15-alpine
+    container_name: billing-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: billing_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - billing-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   keycloak-db:
     image: postgres:15-alpine
     container_name: keycloak-db
@@ -133,9 +173,54 @@ services:
         condition: service_healthy
     networks:
       - inovSmart-network
+
+  supply-db:
+    image: postgres:15-alpine
+    container_name: supply-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: supply_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - supply-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  supply-service:
+    build: ../services/supply-service
+    container_name: supply-service
+    profiles: ["all"]
+    ports:
+      - "8085:8080"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8085/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      supply-db:
+        condition: service_healthy
+
 networks:
   inovSmart-network:
     driver: bridge
 volumes:
   keycloak-data:
   company-data:
+  inventory-data:
+  supply-data:
+  billing-data:

@@ -4,6 +4,7 @@ import com.aliyara.companyservice.adapters.out.keycloak.client.KeycloakGroupClie
 import com.aliyara.companyservice.adapters.out.keycloak.client.KeycloakTokenClient;
 import com.aliyara.companyservice.adapters.out.keycloak.client.KeycloakUserClient;
 import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakGroupRepresentation;
+import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakRoleRepresentation;
 import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakTokenResponse;
 import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakUserRepresentation;
 import com.aliyara.companyservice.application.port.out.KeycloakPort;
@@ -104,8 +105,17 @@ public class KeycloakAdapter implements KeycloakPort {
                 KeycloakGroupRepresentation roleGroup = new KeycloakGroupRepresentation();
                 roleGroup.setName(role.name());
                 ResponseEntity<Void> subgroupResponse = groupClient.createSubgroup(tenantGroupId, roleGroup);
+                String subgroupLocation = subgroupResponse.getHeaders().getLocation().toString();
+                String subgroupId = subgroupLocation.substring(subgroupLocation.lastIndexOf("/") + 1);
+
                 if (subgroupResponse.getStatusCode().is2xxSuccessful()) {
                     log.info("Subgroup created successfully: {}", role.name());
+                    KeycloakRoleRepresentation getRealmRole = groupClient.getRealmRole(role.toString());
+                    log.debug("keycloak real role: {}", getRealmRole);
+                    KeycloakRoleRepresentation attachingBody = new KeycloakRoleRepresentation();
+                    attachingBody.setId(getRealmRole.getId());
+                    attachingBody.setName(getRealmRole.getName());
+                    groupClient.attachRoleToGroup(subgroupId, List.of(attachingBody));
                 } else {
                     log.error("Failed to create subgroup {} with status: {}", role.name(), subgroupResponse.getStatusCode());
                     throw new KeycloakIntegrationException("Failed to create subgroup: " + role.name());

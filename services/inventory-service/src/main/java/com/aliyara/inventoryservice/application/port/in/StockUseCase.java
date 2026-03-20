@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface StockUseCase {
     StockResponse getStockByProductId(UUID productId);
 
-    List<StockResponse> getAllStocks(String tenantId);
+    List<StockResponse> getAllStocks();
 
     StockResponse adjustQuantity(UUID productId, AdjustStockRequest request);
 

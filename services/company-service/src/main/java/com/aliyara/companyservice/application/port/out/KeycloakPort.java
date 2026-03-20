@@ -1,5 +1,6 @@
 package com.aliyara.companyservice.application.port.out;
 
+import com.aliyara.companyservice.adapters.out.keycloak.dto.KeycloakRoleRepresentation;
 import com.aliyara.companyservice.domain.enums.UserRole;
 
 import java.util.UUID;
