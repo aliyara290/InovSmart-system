@@ -1,0 +1,84 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: billing-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+#      enabled: false
+      uri: http://localhost:8888
+  profiles:
+    active: dev
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: billing-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: >-
+          DocumentGeneratedEvent:com.aliyara.billingservice.application.dto.document.DocumentGeneratedEvent,
+          DocumentFailedEvent:com.aliyara.billingservice.application.dto.document.DocumentFailedEvent
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: >-
+          GenerateDocumentEvent:com.aliyara.billingservice.application.dto.document.GenerateDocumentEvent
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      inventoryService:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+      companyService:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-type: COUNT_BASED
+  retry:
+    instances:
+      inventoryService:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - java.io.IOException
+          - feign.RetryableException
+      companyService:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - java.io.IOException
+          - feign.RetryableException
+  timelimiter:
+    instances:
+      inventoryService:
+        timeout-duration: 3s
+      companyService:
+        timeout-duration: 3s
+
+app:
+  kafka:
+    topics:
+      document-generate: document.generate
+      document-generated: document.generated
+      document-failed: document.failed
+
+#logging:
+#  level:
+#    com.aliyara.billingservice: DEBUG
+#    org.springframework.security: DEBUG
