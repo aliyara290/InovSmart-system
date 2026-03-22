@@ -1,4 +1,4 @@
-package com.aliyara.billingservice.infrastrecture.config;
+package com.aliyara.billingservice.infrastructure.config;
 
 import feign.RequestInterceptor;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.application.dto.stock;
 
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
-import com.aliyara.inventoryservice.domain.stock.enums.ReferenceType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.ReferenceType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

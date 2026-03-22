@@ -2,9 +2,8 @@ package com.aliyara.inventoryservice.application.mapper;
 
 import com.aliyara.inventoryservice.application.dto.product.ProductRequest;
 import com.aliyara.inventoryservice.application.dto.product.ProductResponse;
-import com.aliyara.inventoryservice.domain.product.Product;
+import com.aliyara.inventoryservice.domain.model.product.Product;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductDtoMapper {

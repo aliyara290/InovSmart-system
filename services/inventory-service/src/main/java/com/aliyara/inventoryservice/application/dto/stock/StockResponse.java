@@ -1,6 +1,6 @@
 package com.aliyara.inventoryservice.application.dto.stock;
 
-import com.aliyara.inventoryservice.domain.stock.enums.StockStatus;
+import com.aliyara.inventoryservice.domain.model.stock.enums.StockStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

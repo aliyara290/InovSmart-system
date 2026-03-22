@@ -30,12 +30,6 @@ public class CompanyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/hello")
-    public ResponseEntity<String> register() {
-        String response = "Hello world!";
-        return ResponseEntity.ok().body(response);
-    }
-
     @GetMapping("/{tenantId}")
     @PreAuthorize("hasAnyRole('OWNER', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
     public ResponseEntity<CompanyResponse> getCompany(@PathVariable UUID tenantId) {

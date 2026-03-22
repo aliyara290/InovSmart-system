@@ -1,7 +1,7 @@
-package com.aliyara.billingservice.infrastrecture.config;
+package com.aliyara.billingservice.infrastructure.config;
 
 
-import com.aliyara.billingservice.infrastrecture.filter.TenantContextFilter;
+import com.aliyara.billingservice.infrastructure.filter.TenantContextFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

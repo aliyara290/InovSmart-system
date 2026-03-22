@@ -1,4 +1,4 @@
-package com.aliyara.inventoryservice.domain.category;
+package com.aliyara.inventoryservice.domain.model.category;
 
 import lombok.Getter;
 

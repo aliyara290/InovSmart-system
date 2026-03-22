@@ -1,6 +1,6 @@
-package com.aliyara.billingservice.infrastrecture.filter;
+package com.aliyara.billingservice.infrastructure.filter;
 
-import com.aliyara.billingservice.infrastrecture.config.TenantContextHolder;
+import com.aliyara.billingservice.infrastructure.config.TenantContextHolder;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

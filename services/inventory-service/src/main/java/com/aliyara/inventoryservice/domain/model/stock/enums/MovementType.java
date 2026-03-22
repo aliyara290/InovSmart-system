@@ -1,4 +1,4 @@
-package com.aliyara.inventoryservice.domain.stock.enums;
+package com.aliyara.inventoryservice.domain.model.stock.enums;
 
 public enum MovementType {
     IN,

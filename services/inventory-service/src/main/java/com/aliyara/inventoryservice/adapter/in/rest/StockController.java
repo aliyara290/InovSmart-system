@@ -6,6 +6,7 @@ import com.aliyara.inventoryservice.application.dto.stock.StockResponse;
 import com.aliyara.inventoryservice.application.port.in.StockUseCase;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/stocks")
 @RequiredArgsConstructor
+@Slf4j
 public class StockController {
 
     private final StockUseCase stockUseCase;
@@ -42,6 +44,7 @@ public class StockController {
     @PreAuthorize("hasAnyRole('OWNER', 'MANAGER')")
     public StockResponse reserveStock(@PathVariable UUID productId,
             @Valid @RequestBody ReserveStockRequest request) {
+        log.debug("Billing request: {}", request);
         return stockUseCase.reserveStock(productId, request);
     }
 

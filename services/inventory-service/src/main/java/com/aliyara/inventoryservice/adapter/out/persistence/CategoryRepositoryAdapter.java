@@ -2,7 +2,7 @@ package com.aliyara.inventoryservice.adapter.out.persistence;
 
 import com.aliyara.inventoryservice.adapter.out.persistence.jpa.CategoryJpaRepository;
 import com.aliyara.inventoryservice.adapter.out.persistence.mapper.CategoryPersistenceMapper;
-import com.aliyara.inventoryservice.domain.category.Category;
+import com.aliyara.inventoryservice.domain.model.category.Category;
 import com.aliyara.inventoryservice.domain.port.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

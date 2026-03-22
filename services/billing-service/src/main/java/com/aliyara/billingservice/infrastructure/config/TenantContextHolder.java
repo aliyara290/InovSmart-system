@@ -1,6 +1,4 @@
-package com.aliyara.billingservice.infrastrecture.config;
-
-import java.util.UUID;
+package com.aliyara.billingservice.infrastructure.config;
 
 public class TenantContextHolder {
     private static final ThreadLocal<String> currentTenantId = new ThreadLocal<>();

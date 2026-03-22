@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.mapper;
 
 import com.aliyara.inventoryservice.adapter.out.persistence.entity.StockHistoryEntity;
-import com.aliyara.inventoryservice.domain.stock.StockHistory;
+import com.aliyara.inventoryservice.domain.model.stock.StockHistory;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

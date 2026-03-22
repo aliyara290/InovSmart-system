@@ -3,7 +3,7 @@ package com.aliyara.inventoryservice.adapter.out.persistence;
 import com.aliyara.inventoryservice.adapter.out.persistence.jpa.ProductJpaRepository;
 import com.aliyara.inventoryservice.adapter.out.persistence.mapper.ProductPersistenceMapper;
 import com.aliyara.inventoryservice.domain.port.ProductRepository;
-import com.aliyara.inventoryservice.domain.product.Product;
+import com.aliyara.inventoryservice.domain.model.product.Product;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

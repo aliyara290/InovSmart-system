@@ -1,4 +1,4 @@
-package com.aliyara.inventoryservice.domain.product;
+package com.aliyara.inventoryservice.domain.model.product;
 
 import lombok.Getter;
 

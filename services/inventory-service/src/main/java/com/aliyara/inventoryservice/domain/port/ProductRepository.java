@@ -1,6 +1,6 @@
 package com.aliyara.inventoryservice.domain.port;
 
-import com.aliyara.inventoryservice.domain.product.Product;
+import com.aliyara.inventoryservice.domain.model.product.Product;
 
 import java.util.List;
 import java.util.Optional;

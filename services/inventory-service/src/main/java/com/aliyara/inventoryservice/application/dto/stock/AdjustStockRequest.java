@@ -1,6 +1,6 @@
 package com.aliyara.inventoryservice.application.dto.stock;
 
-import com.aliyara.inventoryservice.domain.stock.enums.ReferenceType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.ReferenceType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;

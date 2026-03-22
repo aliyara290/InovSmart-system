@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.jpa;
 
 import com.aliyara.inventoryservice.adapter.out.persistence.entity.StockHistoryEntity;
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

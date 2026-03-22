@@ -1,7 +1,8 @@
-package com.aliyara.inventoryservice.domain.stock;
+package com.aliyara.inventoryservice.domain.model.stock;
 
-import com.aliyara.inventoryservice.domain.stock.enums.StockStatus;
+import com.aliyara.inventoryservice.domain.model.stock.enums.StockStatus;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
+@ToString
 public class Stock {
 
     private final UUID id;

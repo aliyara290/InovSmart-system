@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.entity;
 
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
-import com.aliyara.inventoryservice.domain.stock.enums.ReferenceType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.ReferenceType;
 import jakarta.persistence.*;
 import lombok.*;
 

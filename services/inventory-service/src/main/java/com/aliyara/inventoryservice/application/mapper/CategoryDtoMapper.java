@@ -2,7 +2,7 @@ package com.aliyara.inventoryservice.application.mapper;
 
 import com.aliyara.inventoryservice.application.dto.category.CategoryRequest;
 import com.aliyara.inventoryservice.application.dto.category.CategoryResponse;
-import com.aliyara.inventoryservice.domain.category.Category;
+import com.aliyara.inventoryservice.domain.model.category.Category;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

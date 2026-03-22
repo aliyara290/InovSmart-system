@@ -3,8 +3,8 @@ package com.aliyara.inventoryservice.adapter.out.persistence;
 import com.aliyara.inventoryservice.adapter.out.persistence.jpa.StockHistoryJpaRepository;
 import com.aliyara.inventoryservice.adapter.out.persistence.mapper.StockHistoryPersistenceMapper;
 import com.aliyara.inventoryservice.domain.port.StockHistoryRepository;
-import com.aliyara.inventoryservice.domain.stock.StockHistory;
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.StockHistory;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
