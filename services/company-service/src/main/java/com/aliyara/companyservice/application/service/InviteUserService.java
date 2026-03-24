@@ -61,6 +61,29 @@ public class InviteUserService implements InviteUserUseCase {
         Company company = companyRepository.findByTenantId(tenantId)
             .orElseThrow(() -> new RuntimeException("Company not found"));
 
+        String keycloakUserId = keycloakPort.createUserWithEmailVerification(
+            tenantId,
+            company.getId(),
+            request.getEmail(),
+            request.getFirstName(),
+            request.getLastName()
+        );
+
+        keycloakPort.assignUserToGroup(keycloakUserId, tenantId, request.getRole());
+
+        CompanyUser companyUser = new CompanyUser();
+        companyUser.setId(UUID.randomUUID());
+        companyUser.setTenantId(tenantId);
+        companyUser.setCompanyId(company.getId());
+        companyUser.setUserId(UUID.fromString(keycloakUserId));
+        companyUser.setEmail(request.getEmail());
+        companyUser.setFirstName(request.getFirstName());
+        companyUser.setLastName(request.getLastName());
+        companyUser.setStatus(UserStatus.INVITED);
+        companyUser.setCreatedAt(LocalDateTime.now());
+
+        companyUserRepository.save(companyUser);
+
         CompanyInvitation invitation = new CompanyInvitation();
         invitation.setId(UUID.randomUUID());
         invitation.setTenantId(tenantId);
@@ -77,54 +100,10 @@ public class InviteUserService implements InviteUserUseCase {
 
     @Override
     @Transactional
+    @Deprecated
     public RegisterCompanyResponse acceptInvitation(AcceptInvitationRequest request) {
-        CompanyInvitation invitation = invitationRepository.findByToken(request.getToken())
-            .orElseThrow(() -> new InvitationNotFoundException(request.getToken()));
-
-        if (invitation.getStatus() == InvitationStatus.ACCEPTED) {
-            throw new InvitationAlreadyAcceptedException(request.getToken());
-        }
-
-        if (LocalDateTime.now().isAfter(invitation.getExpiresAt())) {
-            throw new InvitationExpiredException(request.getToken());
-        }
-
-        String keycloakUserId = keycloakPort.createUser(
-            invitation.getTenantId(),
-            invitation.getCompanyId(),
-            invitation.getEmail(),
-            request.getPassword(),
-            request.getFirstName(),
-            request.getLastName()
+        throw new UnsupportedOperationException(
+            "This endpoint is deprecated. Users should verify email and set password via Keycloak email link."
         );
-
-        keycloakPort.assignUserToGroup(keycloakUserId, invitation.getTenantId(), invitation.getRole());
-
-        CompanyUser companyUser = new CompanyUser();
-        companyUser.setId(UUID.randomUUID());
-        companyUser.setTenantId(invitation.getTenantId());
-        companyUser.setCompanyId(invitation.getCompanyId());
-        companyUser.setUserId(UUID.fromString(keycloakUserId));
-        companyUser.setEmail(invitation.getEmail());
-        companyUser.setFirstName(request.getFirstName());
-        companyUser.setLastName(request.getLastName());
-        companyUser.setStatus(UserStatus.ACTIVE);
-        companyUser.setJoinedAt(LocalDateTime.now());
-        companyUser.setCreatedAt(LocalDateTime.now());
-
-        companyUserRepository.save(companyUser);
-
-        invitation.setStatus(InvitationStatus.ACCEPTED);
-        invitationRepository.save(invitation);
-
-        String accessToken = keycloakPort.getUserAccessToken(invitation.getEmail(), request.getPassword());
-
-        RegisterCompanyResponse response = new RegisterCompanyResponse();
-        response.setTenantId(invitation.getTenantId());
-        response.setCompanyId(invitation.getCompanyId());
-        response.setUserId(UUID.fromString(keycloakUserId));
-        response.setAccessToken(accessToken);
-
-        return response;
     }
 }

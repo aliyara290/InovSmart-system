@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface KeycloakPort {
     String createUser(UUID tenantId, UUID companyId, String email, String password, String firstName, String lastName);
+    String createUserWithEmailVerification(UUID tenantId, UUID companyId, String email, String firstName, String lastName);
     void createCompanyGroup(UUID tenantId);
     void assignUserToGroup(String keycloakUserId, UUID tenantId, UserRole role);
     void changeUserGroup(String keycloakUserId, UUID tenantId, UserRole oldRole, UserRole newRole);

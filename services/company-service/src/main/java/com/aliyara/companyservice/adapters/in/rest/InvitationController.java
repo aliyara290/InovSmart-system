@@ -28,6 +28,7 @@ public class InvitationController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @Deprecated
     @PostMapping("/invitations/accept")
     public ResponseEntity<RegisterCompanyResponse> acceptInvitation(@Valid @RequestBody AcceptInvitationRequest request) {
         RegisterCompanyResponse response = inviteUserUseCase.acceptInvitation(request);
