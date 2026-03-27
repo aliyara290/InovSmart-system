@@ -27,7 +27,7 @@ public class OrderEntity {
     @Column(name = "supplier_id", nullable = false)
     private UUID supplierId;
 
-    @Column(name = "order_number", unique = true)
+    @Column(name = "order_number")
     private String orderNumber;
 
     @Column(nullable = false)

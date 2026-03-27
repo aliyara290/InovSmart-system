@@ -3,16 +3,16 @@ package com.aliyara.companyservice.adapters.out.keycloak.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class KeycloakTokenResponse {
-    
+
     @JsonProperty("access_token")
     private String accessToken;
-    
+
     @JsonProperty("refresh_token")
     private String refreshToken;
-    
+
     @JsonProperty("expires_in")
     private Integer expiresIn;
-    
+
     @JsonProperty("token_type")
     private String tokenType;
 

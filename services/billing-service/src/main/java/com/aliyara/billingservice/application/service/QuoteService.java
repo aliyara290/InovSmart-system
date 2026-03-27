@@ -207,13 +207,19 @@ public class QuoteService implements QuoteUseCase {
         }
 
         List<LineItemDto> items = quote.getLines().stream()
-                .map(line -> new LineItemDto(
-                        line.getProductId().toString(),
-                        line.getProductName(),
-                        line.getQuantity(),
-                        line.getUnitPrice(),
-                        line.getLineTotal()
-                ))
+                .map(line -> {
+                    String description = line.getProductName();
+                    if (description == null || description.isBlank()) {
+                        description = line.getProductId().toString();
+                    }
+                    return new LineItemDto(
+                            line.getProductId().toString(),
+                            description,
+                            line.getQuantity(),
+                            line.getUnitPrice(),
+                            line.getLineTotal()
+                    );
+                })
                 .collect(Collectors.toList());
 
         TotalsDto totals = new TotalsDto(
@@ -243,6 +249,9 @@ public class QuoteService implements QuoteUseCase {
 
     private QuoteLine toDomainLine(QuoteLineRequest request) {
         String productName = inventoryServicePort.getProductName(request.getProductId());
+        if (productName == null || productName.isBlank()) {
+            productName = request.getProductId().toString();
+        }
         return new QuoteLine.Builder()
                 .productId(request.getProductId())
                 .productName(productName)

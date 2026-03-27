@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .authorizeExchange(auth -> auth
                         .pathMatchers("/actuator/**").permitAll()
                         .pathMatchers("/internal/**").permitAll()
-                        .pathMatchers("/api/v1/companies/register").permitAll()
+                        .pathMatchers("/company/api/v1/companies/register").permitAll()
                         .pathMatchers("/api/v1/companies/invitations/accept").permitAll()
                         .anyExchange().authenticated()
                 )
