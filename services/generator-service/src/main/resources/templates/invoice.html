@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #333; padding: 40px; }
+        .header { display: flex; justify-content: space-between; margin-bottom: 40px; border-bottom: 3px solid #059669; padding-bottom: 20px; }
+        .header .company-info { max-width: 50%; }
+        .header .document-info { text-align: right; }
+        .company-name { font-size: 24px; font-weight: bold; color: #059669; margin-bottom: 8px; }
+        .document-title { font-size: 28px; font-weight: bold; color: #059669; text-transform: uppercase; }
+        .document-id { font-size: 11px; color: #666; margin-top: 4px; }
+        .section { margin-bottom: 30px; }
+        .section-title { font-size: 13px; font-weight: bold; color: #059669; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .info-line { font-size: 12px; line-height: 1.6; }
+        .addresses { display: flex; justify-content: space-between; margin-bottom: 30px; }
+        .address-block { width: 48%; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th { background-color: #059669; color: #fff; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; }
+        tr:nth-child(even) { background-color: #f9fafb; }
+        .text-right { text-align: right; }
+        .totals-container { display: flex; justify-content: flex-end; }
+        .totals { width: 300px; }
+        .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #e5e7eb; }
+        .totals-row.grand-total { border-top: 2px solid #059669; border-bottom: none; font-weight: bold; font-size: 16px; color: #059669; padding-top: 10px; }
+        .footer { margin-top: 60px; text-align: center; font-size: 10px; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+        .payment-notice { background-color: #ecfdf5; border: 1px solid #059669; border-radius: 4px; padding: 12px; margin-top: 30px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="company-info">
+            <div class="company-name" th:text="${company.name}">Company Name</div>
+            <div class="info-line" th:text="${company.email}">email@company.com</div>
+            <div class="info-line" th:text="${company.phone}">+1 234 567 890</div>
+            <div class="info-line" th:text="${company.address}">Company Address</div>
+        </div>
+        <div class="document-info">
+            <div class="document-title">Invoice</div>
+            <div class="document-id">ID: <span th:text="${documentId}">INV-001</span></div>
+        </div>
+    </div>
+
+    <div class="addresses" th:if="${customer != null}">
+        <div class="address-block">
+            <div class="section-title">Bill To</div>
+            <div class="info-line" th:text="${customer.name}">Customer Name</div>
+            <div class="info-line" th:text="${customer.email}">customer@email.com</div>
+            <div class="info-line" th:text="${customer.phone}">+1 234 567 890</div>
+            <div class="info-line" th:text="${customer.address}">Customer Address</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">Items</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Description</th>
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Unit Price</th>
+                    <th class="text-right">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, stat : ${items}">
+                    <td th:text="${stat.index + 1}">1</td>
+                    <td th:text="${item.description != null ? item.description : item.productId}">Item</td>
+                    <td class="text-right" th:text="${item.quantity}">1</td>
+                    <td class="text-right" th:text="${#numbers.formatDecimal(item.unitPrice, 1, 2)}">0.00</td>
+                    <td class="text-right" th:text="${#numbers.formatDecimal(item.lineTotal, 1, 2)}">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="totals-container">
+        <div class="totals">
+            <div class="totals-row">
+                <span>Subtotal</span>
+                <span th:text="${#numbers.formatDecimal(totals.subtotal, 1, 2)}">0.00</span>
+            </div>
+            <div class="totals-row">
+                <span>Tax (<span th:text="${#numbers.formatDecimal(totals.taxRate * 100, 1, 2)}">0</span>%)</span>
+                <span th:text="${#numbers.formatDecimal(totals.taxAmount, 1, 2)}">0.00</span>
+            </div>
+            <div class="totals-row grand-total">
+                <span>Total Due</span>
+                <span th:text="${#numbers.formatDecimal(totals.total, 1, 2)}">0.00</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-notice">
+        <strong>Payment Terms:</strong> Payment is due within 30 days of the invoice date.
+        Please include the invoice ID in your payment reference.
+    </div>
+
+    <div class="footer">
+        <p>Thank you for your business.</p>
+        <p th:text="'Generated by InvoSmart | ' + ${company.name}">Generated by InvoSmart</p>
+    </div>
+</body>
+</html>

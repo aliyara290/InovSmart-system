@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.mapper;
 
 import com.aliyara.inventoryservice.adapter.out.persistence.entity.CategoryEntity;
-import com.aliyara.inventoryservice.domain.category.Category;
+import com.aliyara.inventoryservice.domain.model.category.Category;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

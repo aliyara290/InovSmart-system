@@ -80,6 +80,54 @@ public class KeycloakAdapter implements KeycloakPort {
     }
 
     @Override
+    public String createUserWithEmailVerification(UUID tenantId, UUID companyId, String email,
+                                                  String firstName, String lastName) {
+        try {
+            log.info("Creating user with email verification in Keycloak: email={}, tenantId={}, companyId={}", email, tenantId, companyId);
+
+            KeycloakUserRepresentation user = new KeycloakUserRepresentation();
+            user.setUsername(email);
+            user.setEmail(email);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEnabled(true);
+            user.setEmailVerified(false);
+
+            user.setAttributes(Map.of(
+                    "tenantId", List.of(tenantId.toString()),
+                    "companyId", List.of(companyId.toString())
+            ));
+
+            log.debug("Sending user creation request to Keycloak");
+            ResponseEntity<Void> response = userClient.createUser(user);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                String location = response.getHeaders().getLocation().getPath();
+                String userId = location.substring(location.lastIndexOf('/') + 1);
+                log.info("User created successfully in Keycloak: userId={}", userId);
+
+                try {
+                    log.info("Sending email verification with UPDATE_PASSWORD action to user: {}", email);
+                    userClient.executeActionsEmail(userId, "frontend-client", 43200, List.of("UPDATE_PASSWORD", "VERIFY_EMAIL"));
+                    log.info("Email verification sent successfully to user: {}", email);
+                } catch (Exception emailException) {
+                    log.warn("Failed to send email verification to user: {}. User created successfully but email not sent. Error: {}", 
+                            email, emailException.getMessage());
+                    log.warn("Please ensure Keycloak SMTP is configured or manually send verification email from Keycloak admin console.");
+                }
+
+                return userId;
+            } else {
+                log.error("Keycloak user creation failed with status: {}", response.getStatusCode());
+                throw new KeycloakIntegrationException("Failed to create user in Keycloak: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            log.error("Error creating user with email verification in Keycloak: email={}, error={}", email, e.getMessage(), e);
+            throw new KeycloakIntegrationException("Failed to create user with email verification in Keycloak: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void createCompanyGroup(UUID tenantId) {
         try {
             String tenantGroupName = "tenant-" + tenantId;

@@ -1,6 +1,7 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.jpa;
 
 import com.aliyara.inventoryservice.adapter.out.persistence.entity.StockEntity;
+import com.aliyara.inventoryservice.domain.model.stock.enums.StockStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,7 +25,7 @@ public interface StockJpaRepository extends JpaRepository<StockEntity, UUID> {
     @Query("SELECT s FROM StockEntity s WHERE s.status = :status AND s.productId IN " +
             "(SELECT p.id FROM ProductEntity p WHERE p.tenantId = :tenantId)")
     List<StockEntity> findByTenantIdAndStatus(@Param("tenantId") String tenantId,
-                                              @Param("status") com.aliyara.inventoryservice.domain.stock.enums.StockStatus status);
+                                              @Param("status") StockStatus status);
 
     @Query("SELECT s FROM StockEntity s WHERE s.status = 'LOW_STOCK' AND s.productId IN " +
             "(SELECT p.id FROM ProductEntity p WHERE p.tenantId = :tenantId)")

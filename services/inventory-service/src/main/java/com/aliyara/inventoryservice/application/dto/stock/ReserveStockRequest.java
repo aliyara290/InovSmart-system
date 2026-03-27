@@ -1,17 +1,19 @@
 package com.aliyara.inventoryservice.application.dto.stock;
 
-import com.aliyara.inventoryservice.domain.stock.enums.ReferenceType;
+import com.aliyara.inventoryservice.domain.model.stock.enums.ReferenceType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ReserveStockRequest {
 
     @Positive(message = "quantity must be positive")

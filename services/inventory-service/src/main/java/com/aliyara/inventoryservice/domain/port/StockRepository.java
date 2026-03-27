@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.domain.port;
 
-import com.aliyara.inventoryservice.domain.stock.Stock;
-import com.aliyara.inventoryservice.domain.stock.enums.StockStatus;
+import com.aliyara.inventoryservice.domain.model.stock.Stock;
+import com.aliyara.inventoryservice.domain.model.stock.enums.StockStatus;
 
 import java.util.List;
 import java.util.Optional;

@@ -8,11 +8,12 @@ import com.aliyara.inventoryservice.application.port.in.StockUseCase;
 import com.aliyara.inventoryservice.domain.exception.StockNotFoundException;
 import com.aliyara.inventoryservice.domain.port.StockHistoryRepository;
 import com.aliyara.inventoryservice.domain.port.StockRepository;
-import com.aliyara.inventoryservice.domain.stock.Stock;
-import com.aliyara.inventoryservice.domain.stock.StockHistory;
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.Stock;
+import com.aliyara.inventoryservice.domain.model.stock.StockHistory;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
 import com.aliyara.inventoryservice.infrastructure.config.TenantContextHolder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StockService implements StockUseCase {
 
     private final StockRepository stockRepository;
@@ -75,10 +77,11 @@ public class StockService implements StockUseCase {
     @Transactional
     public StockResponse reserveStock(UUID productId, ReserveStockRequest request) {
         Stock stock = findStockByProductId(productId);
+        log.debug("stock: {}", stock);
         int quantityBefore = stock.getQuantityTotal();
 
         stock.reserve(request.getQuantity());
-
+        log.debug("updated stock: {}", stock);
         StockHistory history = new StockHistory.Builder()
                 .productId(productId)
                 .tenantId(resolveTenantId(stock))
@@ -91,9 +94,10 @@ public class StockService implements StockUseCase {
                 .referenceId(request.getReferenceId())
                 .performedBy(request.getPerformedBy())
                 .build();
-
+        log.debug("start saving stock");
         stockHistoryRepository.save(history);
         Stock saved = stockRepository.save(stock);
+        log.debug("saved stock: {}", saved);
         return stockDtoMapper.toResponse(saved);
     }
 

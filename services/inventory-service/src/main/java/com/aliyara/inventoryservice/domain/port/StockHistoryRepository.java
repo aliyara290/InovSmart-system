@@ -1,7 +1,7 @@
 package com.aliyara.inventoryservice.domain.port;
 
-import com.aliyara.inventoryservice.domain.stock.StockHistory;
-import com.aliyara.inventoryservice.domain.stock.enums.MovementType;
+import com.aliyara.inventoryservice.domain.model.stock.StockHistory;
+import com.aliyara.inventoryservice.domain.model.stock.enums.MovementType;
 
 import java.time.LocalDateTime;
 import java.util.List;

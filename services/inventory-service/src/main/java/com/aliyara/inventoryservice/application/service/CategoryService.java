@@ -4,7 +4,7 @@ import com.aliyara.inventoryservice.application.dto.category.CategoryRequest;
 import com.aliyara.inventoryservice.application.dto.category.CategoryResponse;
 import com.aliyara.inventoryservice.application.mapper.CategoryDtoMapper;
 import com.aliyara.inventoryservice.application.port.in.CategoryUseCase;
-import com.aliyara.inventoryservice.domain.category.Category;
+import com.aliyara.inventoryservice.domain.model.category.Category;
 import com.aliyara.inventoryservice.domain.exception.CategoryNotFoundException;
 import com.aliyara.inventoryservice.domain.port.CategoryRepository;
 import com.aliyara.inventoryservice.infrastructure.config.TenantContextHolder;

@@ -1,6 +1,6 @@
 package com.aliyara.inventoryservice.adapter.out.persistence.entity;
 
-import com.aliyara.inventoryservice.domain.stock.enums.StockStatus;
+import com.aliyara.inventoryservice.domain.model.stock.enums.StockStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

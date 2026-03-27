@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @FeignClient(
     name = "keycloak-admin-api",
     contextId = "keycloak-user-client",
@@ -27,4 +29,12 @@ public interface KeycloakUserClient {
 
     @DeleteMapping("/admin/realms/${keycloak.realm}/users/{userId}/groups/{groupId}")
     void removeUserFromGroup(@PathVariable("userId") String userId, @PathVariable("groupId") String groupId);
+
+    @PutMapping("/admin/realms/${keycloak.realm}/users/{userId}/execute-actions-email")
+    void executeActionsEmail(
+            @PathVariable("userId") String userId, 
+            @RequestParam(value = "client_id", required = false) String clientId,
+            @RequestParam(value = "lifespan", required = false) Integer lifespan,
+            @RequestBody List<String> actions);
 }
+
