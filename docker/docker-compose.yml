@@ -1,0 +1,296 @@
+services:
+  eureka-server:
+    build: ../infrastructure/eureka-server
+    container_name: eureka-server
+    profiles: ["all"]
+    ports:
+      - "8761:8761"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  config-server:
+    build: ../infrastructure/config-server
+    container_name: config-server
+    profiles: ["all"]
+    ports:
+      - "8888:8080"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+
+  api-gateway:
+    build: ../infrastructure/api-gateway
+    container_name: api-gateway
+    profiles: ["all"]
+    ports:
+      - "8080:8080"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+
+  company-service:
+    build: ../services/company-service
+    container_name: company-service
+    profiles: ["all"]
+    ports:
+      - "8081:8080"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8081/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      company-db:
+        condition: service_healthy
+
+  company-db:
+    image: postgres:15-alpine
+    container_name: company-db
+    profiles: [ "default", "all"]
+    environment:
+      POSTGRES_DB: company_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - company-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  inventory-db:
+    image: postgres:15-alpine
+    container_name: inventory-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5434:5432"
+    volumes:
+      - inventory-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  billing-db:
+    image: postgres:15-alpine
+    container_name: billing-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: billing_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5435:5432"
+    volumes:
+      - billing-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak-db:
+    image: postgres:15-alpine
+    container_name: keycloak-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - keycloak-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    container_name: keycloak-system
+    profiles: [ "default", "all", ]
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak_db
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_HTTP_PORT: 8080
+    ports:
+      - "8090:8080"
+    #    volumes:
+    #      - ./api-gateway/themes:/opt/keycloak/themes
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - inovSmart-network
+
+  supply-db:
+    image: postgres:15-alpine
+    container_name: supply-db
+    profiles: [ "default", "all" ]
+    environment:
+      POSTGRES_DB: supply_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5436:5432"
+    volumes:
+      - supply-data:/var/lib/postgresql/data
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U aliyara29" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  supply-service:
+    build: ../services/supply-service
+    container_name: supply-service
+    profiles: ["all"]
+    ports:
+      - "8085:8080"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8085/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      supply-db:
+        condition: service_healthy
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: zookeeper
+    profiles: [ "default", "all" ]
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "2181" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: kafka
+    profiles: [ "default", "all" ]
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    ports:
+      - "29092:29092"
+      - "9092:9092"
+    networks:
+      - inovSmart-network
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092" ]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+
+  generator-service:
+    build: ../services/generator-service
+    container_name: generator-service
+    profiles: ["all"]
+    ports:
+      - "8086:8080"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-invosmart-documents}
+      AWS_S3_REGION: ${AWS_S3_REGION:-eu-west-1}
+      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY:-}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY:-}
+    networks:
+      - inovSmart-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8086/actuator/health" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+networks:
+  inovSmart-network:
+    driver: bridge
+volumes:
+  keycloak-data:
+  company-data:
+  inventory-data:
+  supply-data:
+  billing-data:

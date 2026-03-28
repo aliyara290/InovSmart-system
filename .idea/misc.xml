@@ -9,6 +9,16 @@
         <option value="$PROJECT_DIR$/company-service/pom.xml" />
         <option value="$PROJECT_DIR$/sme-service/pom.xml" />
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/api-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/services/company-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/billing-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/inventory-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/procurement-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/sme-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/supply-service/pom.xml" />
+        <option value="$PROJECT_DIR$/services/generator-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
@@ -17,5 +27,5 @@
       </set>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="ms-17" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="ms-17" project-jdk-type="JavaSDK" />
 </project>

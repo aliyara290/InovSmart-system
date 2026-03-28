@@ -1,119 +1,139 @@
 package com.aliyara.companyservice.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import com.aliyara.companyservice.domain.enums.CompanyStatus;
+import com.aliyara.companyservice.domain.enums.SubscriptionPlan;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Company {
-
-    private final String id;
-    private final String tenantId;
+    private UUID id;
+    private UUID tenantId;
     private String name;
     private String email;
     private String phone;
-    private String website;
-    private int size;
-    private int foundedYear;
-    private String description;
-    private Address address;
-    private CompanySettings companySettings;
+    private String address;
+    private String industry;
+    private SubscriptionPlan subscriptionPlan;
+    private CompanyStatus status;
+    private UUID ownerId;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    private Company(Builder builder) {
-        validate(builder);
-        this.id = builder.id;
-        this.tenantId = builder.tenantId;
-        this.name = builder.name;
-        this.email = builder.email;
-        this.phone = builder.phone;
-        this.website = builder.website;
-        this.size = builder.size;
-        this.foundedYear = builder.foundedYear;
-        this.description = builder.description;
-        this.address = builder.address;
-        this.companySettings = builder.companySettings;
+    public Company() {
     }
 
-    public static class Builder {
-        private String id;
-        private String tenantId;
-        private String name;
-        private String email;
-        private String phone;
-        private String website;
-        private int size;
-        private int foundedYear;
-        private String description;
-        private Address address;
-        private CompanySettings companySettings;
-
-        public Builder id(String id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder tenantId(String tenantId) {
-            this.tenantId = tenantId;
-            return this;
-        }
-
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.email = email;
-            return this;
-        }
-
-        public Builder phone(String phone) {
-            this.phone = phone;
-            return this;
-        }
-
-        public Builder website(String website) {
-            this.website = website;
-            return this;
-        }
-
-        public Builder size(int size) {
-            this.size = size;
-            return this;
-        }
-
-        public Builder foundedYear(int foundedYear) {
-            this.foundedYear = foundedYear;
-            return this;
-        }
-
-        public Builder description(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder address(Address address) {
-            this.address = address;
-            return this;
-        }
-
-        public Builder companySettings(CompanySettings companySettings) {
-            this.companySettings = companySettings;
-            return this;
-        }
-
-        public Company build() {
-            return new Company(this);
-        }
+    public Company(UUID id, UUID tenantId, String name, String email, String phone, 
+                   String address, String industry, SubscriptionPlan subscriptionPlan, 
+                   CompanyStatus status, UUID ownerId, LocalDateTime createdAt, 
+                   LocalDateTime updatedAt) {
+        this.id = id;
+        this.tenantId = tenantId;
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.industry = industry;
+        this.subscriptionPlan = subscriptionPlan;
+        this.status = status;
+        this.ownerId = ownerId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    private void validate(Builder builder) {
-        if (builder.name == null || builder.name.isBlank()) {
-            throw new IllegalArgumentException("Company name cannot be empty");
-        }
+    public UUID getId() {
+        return id;
+    }
 
-        if (builder.email == null || !builder.email.contains("@")) {
-            throw new IllegalArgumentException("Invalid email");
-        }
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public UUID getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(UUID tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
+        this.industry = industry;
+    }
+
+    public SubscriptionPlan getSubscriptionPlan() {
+        return subscriptionPlan;
+    }
+
+    public void setSubscriptionPlan(SubscriptionPlan subscriptionPlan) {
+        this.subscriptionPlan = subscriptionPlan;
+    }
+
+    public CompanyStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CompanyStatus status) {
+        this.status = status;
+    }
+
+    public UUID getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(UUID ownerId) {
+        this.ownerId = ownerId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

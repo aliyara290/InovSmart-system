@@ -1,0 +1,53 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: generator-service
+  config:
+    import: "optional:configserver:"
+  cloud:
+    config:
+      uri: http://localhost:8888
+  profiles:
+    active: dev
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: generator-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.type.mapping: >-
+          GenerateDocumentEvent:com.aliyara.generatorservice.application.dto.GenerateDocumentCommand
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: >-
+          DocumentGeneratedEvent:com.aliyara.generatorservice.application.dto.DocumentGeneratedEvent,
+          DocumentFailedEvent:com.aliyara.generatorservice.application.dto.DocumentFailedEvent
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+
+app:
+  kafka:
+    topics:
+      document-generate: document.generate
+      document-generated: document.generated
+      document-failed: document.failed
+  aws:
+    s3:
+      bucket: ${AWS_S3_BUCKET}
+      region: ${AWS_S3_REGION}
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+
+logging:
+  level:
+    com.aliyara.generatorservice: DEBUG
