@@ -16,6 +16,7 @@ import com.aliyara.billingservice.domain.model.common.CompanySnapshot;
 import com.aliyara.billingservice.domain.model.common.CustomerSnapshot;
 import com.aliyara.billingservice.domain.model.invoice.Invoice;
 import com.aliyara.billingservice.domain.model.invoice.InvoiceLine;
+import com.aliyara.billingservice.domain.model.invoice.enums.InvoiceStatus;
 import com.aliyara.billingservice.domain.model.quote.Quote;
 import com.aliyara.billingservice.domain.model.quote.QuoteLine;
 import com.aliyara.billingservice.domain.model.quote.enums.QuoteStatus;
@@ -286,5 +287,14 @@ public class InvoiceService implements InvoiceUseCase {
             throw new InvoiceNotFoundException("Invoice not found: " + invoiceId);
         }
         return invoice;
+    }
+
+
+    @Override
+    public List<InvoiceResponse> getAllInvoicesByStatusPaid() {
+        String tenantId = TenantContextHolder.getTenantId();
+        return invoiceRepositoryPort.findAllByStatusAndTenantId(InvoiceStatus.PAID, tenantId).stream()
+                .map(invoiceDtoMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

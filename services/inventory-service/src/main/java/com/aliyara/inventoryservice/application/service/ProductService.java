@@ -80,6 +80,16 @@ public class ProductService implements ProductUseCase {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategory(UUID categoryId) {
+        String tenantId = TenantContextHolder.getTenantId();
+        return productRepository.findByCategoryIdAndTenantId(categoryId, tenantId)
+                .stream()
+                .map(productDtoMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public ProductResponse updateProduct(UUID id, ProductRequest request) {
         String tenantId = TenantContextHolder.getTenantId();
