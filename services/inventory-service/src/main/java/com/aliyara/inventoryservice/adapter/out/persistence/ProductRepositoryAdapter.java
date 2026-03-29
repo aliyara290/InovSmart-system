@@ -41,6 +41,14 @@ public class ProductRepositoryAdapter implements ProductRepository {
     }
 
     @Override
+    public List<Product> findByCategoryIdAndTenantId(UUID categoryId, String tenantId) {
+        return productJpaRepository.findByCategoryIdAndTenantId(categoryId, tenantId)
+                .stream()
+                .map(productPersistenceMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public boolean existsBySku(String sku, String tenantId) {
         return productJpaRepository.existsBySkuAndTenantId(sku, tenantId);
     }

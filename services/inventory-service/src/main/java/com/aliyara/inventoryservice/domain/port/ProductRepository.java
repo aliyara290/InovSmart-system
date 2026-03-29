@@ -13,6 +13,8 @@ public interface ProductRepository {
 
     List<Product> findAllByTenantId(String tenantId);
 
+    List<Product> findByCategoryIdAndTenantId(UUID categoryId, String tenantId);
+
     boolean existsBySku(String sku, String tenantId);
 
     void deleteById(UUID id);

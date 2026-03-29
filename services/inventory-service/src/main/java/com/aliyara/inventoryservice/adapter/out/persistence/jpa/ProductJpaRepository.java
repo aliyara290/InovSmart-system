@@ -9,5 +9,7 @@ import java.util.UUID;
 public interface ProductJpaRepository extends JpaRepository<ProductEntity, UUID> {
     List<ProductEntity> findAllByTenantId(String tenantId);
 
+    List<ProductEntity> findByCategoryIdAndTenantId(UUID categoryId, String tenantId);
+
     boolean existsBySkuAndTenantId(String sku, String tenantId);
 }
