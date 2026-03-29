@@ -13,6 +13,8 @@ public interface ProductUseCase {
 
     List<ProductResponse> getAllProducts();
 
+    List<ProductResponse> getProductsByCategory(UUID categoryId);
+
     ProductResponse updateProduct(UUID id, ProductRequest request);
 
     void deleteProduct(UUID id);

@@ -23,4 +23,7 @@ public interface InvoiceUseCase {
     InvoiceResponse cancelInvoice(UUID invoiceId);
 
     InvoiceResponse generateInvoiceDocument(UUID invoiceId);
+
+
+    List<InvoiceResponse> getAllInvoicesByStatusPaid();
 }

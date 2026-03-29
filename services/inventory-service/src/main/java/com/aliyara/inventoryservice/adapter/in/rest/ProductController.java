@@ -38,6 +38,12 @@ public class ProductController {
         return productUseCase.getAllProducts();
     }
 
+    @GetMapping("/category/{categoryId}")
+    @PreAuthorize("hasAnyRole('OWNER', 'MANAGER', 'ACCOUNTANT', 'EMPLOYEE')")
+    public List<ProductResponse> getProductsByCategory(@PathVariable UUID categoryId) {
+        return productUseCase.getProductsByCategory(categoryId);
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('OWNER', 'MANAGER')")
     public ProductResponse updateProduct(@PathVariable UUID id,
