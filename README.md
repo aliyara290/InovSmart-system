@@ -1,5 +1,8 @@
 # InvoSmart - Multi-Tenant Business Management System
 
+## Frontend Repository: https://github.com/aliyara290/InovSmart-system-Angular
+## Config Server Repository: https://github.com/aliyara290/InovSmart-config-server
+
 ## Table of Contents
 - [Overview](#overview)
 - [The Problem](#the-problem)
